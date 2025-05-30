@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="jumbotron">
+      <h1 class="display-4">Outbox Pattern Prototype</h1>
+      <p class="lead">
+        The Outbox pattern is a messaging design pattern that ensures reliable 
+        message delivery and data consistency in event-driven microservices. 
+        It works by storing messages in a dedicated "outbox" table within the 
+        source service's database, within a transaction alongside database 
+        updates. A background process then reads from this outbox and publishes 
+        the messages, ensuring that messages are sent at least once and that 
+        database updates and message publication are treated atomically. 
+      </p>
+      <hr class="my-4">
+      <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+      <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

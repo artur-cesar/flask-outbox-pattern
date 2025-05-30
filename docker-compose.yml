@@ -10,3 +10,20 @@ services:
       - .:/app
     environment:
       - FLASK_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/postgres
+    depends_on:
+      database:
+        condition: service_healthy
+  database:
+    container_name: database
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: "5s"
+      retries: "5"

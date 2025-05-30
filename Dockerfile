@@ -1,6 +1,8 @@
 # Usa uma imagem oficial do Python como base
 FROM python:3.11-slim
 
+RUN apt-get update && apt-get install -y make && rm -rf /var/libs/apt/lists/*
+
 # Define o diretório de trabalho no container
 WORKDIR /app
 

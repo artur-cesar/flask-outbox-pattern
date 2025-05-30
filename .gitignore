@@ -102,3 +102,6 @@ docker-compose.override.yml
 # Secret keys
 *.pem
 *.key
+
+.pgdata
+.instance
