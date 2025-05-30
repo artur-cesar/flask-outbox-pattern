@@ -1,0 +1,44 @@
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore local virtualenvs
+venv/
+env/
+.venv/
+.env/
+
+# Ignore Git files
+.git/
+.gitignore
+
+# Ignore editor configs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore Docker-related local files
+.dockerignore
+docker-compose.override.yml
+*.log
+*.pid
+*.pid.lock
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore coverage and test outputs
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+.pytest_cache/
+
+# Ignore build artifacts
+build/
+dist/
+*.egg-info/
+.eggs/
