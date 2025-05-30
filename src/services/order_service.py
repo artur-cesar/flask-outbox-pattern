@@ -1,7 +1,10 @@
 from typing import List
 
+from src.extensions import db
 from src.models.order import Order
+from src.models.outbox import Outbox
 from src.repositories.order_repository import OrderRepository
+from src.repositories.outbox_repository import OutboxRepository
 
 
 class OrderService:
@@ -15,4 +18,8 @@ class OrderService:
 
     def create(self, order_data: dict) -> Order:
         order = self.repository.create(order_data=order_data)
+        outbox_repository = OutboxRepository()
+        outbox_repository.create(order.to_dict())
+
+        db.session.commit()
         return order.to_dict()

@@ -18,6 +18,5 @@ class OrderRepository:
         )
 
         db.session.add(order)
-        db.session.commit()
 
         return order
