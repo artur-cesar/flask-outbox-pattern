@@ -11,7 +11,7 @@ seed:
 
 migration:
 	@echo "Creating new migration..."
-	@flask db migrate -m "$(msg)"
+	@flask db migrate -m "$(name)"
 
 migrate:
 	@echo "Applying migrations..."

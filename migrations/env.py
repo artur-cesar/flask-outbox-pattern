@@ -38,7 +38,7 @@ config.set_main_option("sqlalchemy.url", get_engine_url())
 target_db = current_app.extensions["migrate"].db
 
 # Force import your models so Alembic can see them
-from src.models import order
+from src.models import order, outbox
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
