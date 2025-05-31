@@ -5,6 +5,7 @@ from src.models.order import Order
 from src.models.outbox import Outbox
 from src.repositories.order_repository import OrderRepository
 from src.repositories.outbox_repository import OutboxRepository
+from src.services.message_service import MessageService
 
 
 class OrderService:
@@ -22,4 +23,11 @@ class OrderService:
         outbox_repository.create(order.to_dict())
 
         db.session.commit()
+
+        message_service = MessageService()
+        message = [str(x) for x in order.to_dict()]
+        message_service.publish(
+            message=message, queue="order.created", topic="order_exchange"
+        )
+
         return order.to_dict()

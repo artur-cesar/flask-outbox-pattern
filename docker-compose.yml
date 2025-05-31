@@ -11,9 +11,15 @@ services:
     environment:
       - FLASK_ENV=development
       - DATABASE_URL=postgresql://postgres:postgres@database:5432/postgres
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASS=guest
     depends_on:
       database:
         condition: service_healthy
+    networks:
+      - app_network
   database:
     container_name: database
     image: postgres:14
@@ -27,3 +33,20 @@ services:
       test: ["CMD", "pg_isready", "-U", "postgres"]
       interval: "5s"
       retries: "5"
+    networks:
+      - app_network
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_LOAD_DEFINITIONS: /etc/rabbitmq/definitions.json
+    networks:
+      - app_network
+networks:
+  app_network:
+    driver: bridge
