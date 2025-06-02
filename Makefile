@@ -20,3 +20,7 @@ migrate:
 migrate-down:
 	@echo "Rolling back last migration..."
 	@flask db downgrade -- -1
+
+logs:
+	@echo "Tail logs..."
+	@docker logs -f -m $(service)

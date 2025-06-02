@@ -3,26 +3,32 @@ import os
 
 import pika
 
+from src.adapters.rabbitmq_adapter import RabbitMQAdapter
+
 
 class MessageService:
 
-    def __init__(self):
-        rabbitmq_host = os.getenv("RABBITMQ_HOST", "localhost")
-        rabbitmq_port = int(os.getenv("RABBITMQ_PORT", 5672))
-        rabbitmq_user = os.getenv("RABBITMQ_USER", "guest")
-        rabbitmq_password = os.getenv("RABBITMQ_PASS", "guest")
+    def __init__(self, broker_adapter=None):
+        try:
+            self.broker_adapter = broker_adapter or RabbitMQAdapter(
+                host=os.getenv("RABBITMQ_HOST", "localhost"),
+                port=int(os.getenv("RABBITMQ_PORT", 5672)),
+                user=os.getenv("RABBITMQ_USER", "guest"),
+                password=os.getenv("RABBITMQ_PASS", "guest"),
+            )
 
-        credentials = pika.PlainCredentials(rabbitmq_user, rabbitmq_password)
-        parameters = pika.ConnectionParameters(
-            host=rabbitmq_host, port=rabbitmq_port, credentials=credentials
-        )
-
-        self.connection = pika.BlockingConnection(parameters)
-        self.channel = self.connection.channel()
+        except Exception as e:
+            raise Exception(f"Failed to connect to RabbitMQ: {e}")
 
     def publish(self, message: dict, queue: str, topic: str = ""):
-        self.channel.queue_declare(queue=queue, durable=True)
-        self.channel.basic_publish(
+        if not self.broker_adapter:
+            raise Exception("Broker not connected")
+
+        if not self.broker_adapter.is_connected():
+            self.broker_adapter.reconnect()
+
+        self.broker_adapter.channel.queue_declare(queue=queue, durable=True)
+        self.broker_adapter.channel.basic_publish(
             exchange=topic,
             routing_key=queue,
             body=json.dumps(message),
@@ -30,5 +36,7 @@ class MessageService:
         )
 
     def close(self):
-        if self.connection and not self.connection.is_closed:
-            self.connection.close()
+        self.broker_adapter.close()
+
+    def connection(self):
+        return self.broker_adapter.connection

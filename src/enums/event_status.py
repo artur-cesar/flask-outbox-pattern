@@ -2,5 +2,5 @@ from enum import Enum
 
 
 class EventStatus(Enum):
-    PENDING = "pending"
-    COMPLETED = "completed"
+    PENDING = "PENDING"
+    COMPLETED = "COMPLETED"

@@ -3,6 +3,7 @@ from pydantic import ValidationError
 
 from src.requests.order_request import OrderRequest
 from src.services.order_service import OrderService
+from src.tasks import process_outbox
 
 order_bp = Blueprint("order", __name__)
 order_service = OrderService()

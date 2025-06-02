@@ -24,3 +24,4 @@ watchdog==6.0.0
 Werkzeug==3.1.3
 pydantic==2.6.4
 pika==1.3.2 
+celery[pyamqp]==5.3.6

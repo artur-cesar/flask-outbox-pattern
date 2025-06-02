@@ -47,6 +47,43 @@ services:
       RABBITMQ_LOAD_DEFINITIONS: /etc/rabbitmq/definitions.json
     networks:
       - app_network
+  worker:
+    container_name: worker
+    build: .
+    command: celery -A src.celery_app.celery_app worker --loglevel=info
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/postgres
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASS=guest
+    depends_on:
+      - database
+      - rabbitmq
+    networks:
+      - app_network
+  beat:
+    container_name: outbox_beat
+    build: .
+    command: celery -A src.celery_app.celery_app beat --loglevel=info
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres@database:5432/postgres
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASS=guest
+    depends_on:
+      - rabbitmq
+      - database
+    networks:
+      - app_network
+
 networks:
   app_network:
     driver: bridge

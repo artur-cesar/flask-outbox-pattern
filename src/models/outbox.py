@@ -23,3 +23,14 @@ class Outbox(db.Model):
     created_at: Mapped[datetime] = mapped_column(
         db.DateTime, server_default=db.func.now()
     )
+    processed_at: Mapped[datetime] = mapped_column(db.DateTime, nullable=True)
+    attempts: Mapped[int] = mapped_column(db.Integer, default=0, nullable=False)
+
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "event_type": self.event_type,
+            "payload": self.payload,
+            "status": self.status.value,
+            "created_at": self.created_at.isoformat(),
+        }

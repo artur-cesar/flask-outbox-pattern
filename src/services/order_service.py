@@ -24,10 +24,4 @@ class OrderService:
 
         db.session.commit()
 
-        message_service = MessageService()
-        message = [str(x) for x in order.to_dict()]
-        message_service.publish(
-            message=message, queue="order.created", topic="order_exchange"
-        )
-
         return order.to_dict()
