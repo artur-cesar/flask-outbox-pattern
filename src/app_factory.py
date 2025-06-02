@@ -20,11 +20,4 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    with app.app_context():
-        try:
-            db.session.execute("SELECT 1")
-            print("Database connection OK!")
-        except Exception as e:
-            print(f"Database connection ERROR: {e}")
-
     return app

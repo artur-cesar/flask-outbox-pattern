@@ -8,24 +8,42 @@
 <body>
   <div class="container my-5">
     <section>
-      <div class="jumbotron mb-5">
+      <div class="jumbotron mb-3">
         <h1 class="display-4">Outbox Pattern Prototype</h1>
         <p class="lead">
-          The Outbox pattern is a messaging design pattern that ensures reliable 
-          message delivery and data consistency in event-driven microservices. 
-          It works by storing messages in a dedicated "outbox" table within the 
-          source service's database, within a transaction alongside database 
-          updates. A background process then reads from this outbox and publishes 
-          the messages, ensuring that messages are sent at least once and that 
-          database updates and message publication are treated atomically. 
+          This is a simple prototype to demonstrate the Outbox pattern in action.
+          It allows you to register orders, which are stored in a database.
+          The orders are then processed asynchronously, simulating the Outbox pattern.
         </p>
         <hr class="my-4">
-        <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-        <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+        <p class="lead">
+          For more information, you can read the detailed documentation on the 
+          <a href="https://microservices.io/patterns/data/transactional-outbox.html" target="_blank">Outbox Pattern</a>.
+        </p>
       </div>
     </section>
     <section>
-      <h2>Register a order</h2>
+      <h2>What is this interface for?</h2>
+      <p>You can use this interface to register <code>orders</code>.
+      The orders will be stored in a database and processed asynchronously.
+      The Outbox pattern is used to ensure that the orders are processed reliably and without loss.</p>
+      <p>Below the form you can see the list of registered orders and its outbox record. At the first moment you must see the outbox status as <code>PENDING</code>. After a reload, you will see this status as <code>COMPLETED</code>.</p>
+    </section>
+    <section>
+      <h2>What about the project ecosystem?</h2>
+      <p>This project is designed to work within a microservices architecture.
+      It can be integrated with other services such as inventory management,
+      payment processing, and shipping services.</p>
+      <p><strong>The services involved in this project include:</strong></p>
+      <ul>
+        <li><code>api:</code> Handles order API and worker</li>
+        <li><code>database:</code> Stores the order data and outbox event</li>
+        <li><code>worker:</code> Processes the orders</li>
+        <li><code>worker beat:</code> Triggers the processing at regular intervals (5 seconds)</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Register an order</h2>
       <form id="orderForm">
         <div class="form-group">
           <label for="customerName">Customer name</label>
@@ -54,6 +72,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+
     function createList(order) {
       const listItem = document.createElement('li');
       listItem.classList.add('list-group-item');
@@ -66,10 +85,10 @@
         order.outbox.forEach(outboxItem => {
           const outboxListItem = document.createElement('li');
           outboxListItem.classList.add('list-group-item', 'list-group-item-secondary');
-          outboxListItem.textContent = `Event: ${outboxItem.event_type}, Status: ${outboxItem.status}, Created: ${outboxItem.created_at}`;
+          outboxListItem.textContent = `Event: ${outboxItem.event_type}, Created: ${outboxItem.created_at}, Status: ${outboxItem.status}`;
           outboxList.appendChild(outboxListItem);
-      });
-      listItem.appendChild(outboxList);
+        });
+        listItem.appendChild(outboxList);
       }
 
       document.querySelector('#ordersList ul').appendChild(listItem);
@@ -88,7 +107,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      setTimeout(fetchOrders, 1000);
+      fetchOrders();
     });
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -114,14 +133,9 @@
           if (!response.ok) {
             return response.text().then(text => { throw new Error(text) });
           }
-          return response.json();
+          window.location.reload();
         })
-        .then(data => {
-          alert('Order registered successfully!');
-          fetchOrders();
-          document.getElementById('orderForm').reset();
-        })
-        .catch(error => {
+       .catch(error => {
           alert('Error registering order: ' + error.message);
         });
       });

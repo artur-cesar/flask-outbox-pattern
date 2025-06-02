@@ -21,6 +21,9 @@ class Order(db.Model):
         back_populates="order",
         cascade="all, delete-orphan",
     )
+    created_at: Mapped[sa.DateTime] = mapped_column(
+        sa.DateTime(timezone=True), server_default=sa.func.now()
+    )
 
     def __init__(self, id, customer_name, price):
         self.id = id

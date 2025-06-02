@@ -10,7 +10,11 @@ from src.models.order import Order
 class OrderRepository:
 
     def list(self) -> List[Order]:
-        return Order.query.options(joinedload(Order.outbox)).all()
+        return (
+            Order.query.options(joinedload(Order.outbox))
+            .order_by(Order.created_at.desc())
+            .all()
+        )
 
     def create(self, order_data: dict) -> Order:
         order = Order(
