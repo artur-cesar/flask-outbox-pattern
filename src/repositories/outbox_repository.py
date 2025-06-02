@@ -10,6 +10,7 @@ class OutboxRepository:
     def create(self, order_data: dict) -> None:
         outbox = Outbox(
             event_type="OrderCreated",
+            order_id=order_data["id"],
             payload={
                 "order_id": str(order_data["id"]),
                 "customer_name": order_data["customer_name"],

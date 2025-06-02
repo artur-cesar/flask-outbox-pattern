@@ -1,6 +1,8 @@
 from typing import List
 from uuid import uuid4
 
+from sqlalchemy.orm import joinedload
+
 from src.extensions import db
 from src.models.order import Order
 
@@ -8,7 +10,7 @@ from src.models.order import Order
 class OrderRepository:
 
     def list(self) -> List[Order]:
-        return Order.query.all()
+        return Order.query.options(joinedload(Order.outbox)).all()
 
     def create(self, order_data: dict) -> Order:
         order = Order(

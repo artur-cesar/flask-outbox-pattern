@@ -3,7 +3,7 @@ from typing import Optional
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.extensions import db
 
@@ -16,6 +16,11 @@ class Order(db.Model):
     )
     customer_name: Mapped[str] = mapped_column(db.String(100), nullable=False)
     price: Mapped[Optional[float]] = mapped_column(db.Float(precision=2))
+    outbox = relationship(
+        "Outbox",
+        back_populates="order",
+        cascade="all, delete-orphan",
+    )
 
     def __init__(self, id, customer_name, price):
         self.id = id
@@ -30,4 +35,5 @@ class Order(db.Model):
             "id": self.id,
             "customer_name": self.customer_name,
             "price": round(self.price, 2),
+            "outbox": [outbox.to_dict() for outbox in self.outbox],
         }
