@@ -22,6 +22,7 @@ The **Transactional Outbox** pattern ensures reliable event delivery in distribu
 > **Learn more**: [https://microservices.io/patterns/data/transactional-outbox.html](https://microservices.io/patterns/data/transactional-outbox.html)
 
 ---
+![Meu Diagrama](doc/ReliablePublication.png)
 
 ## 🧩 Service Architecture
 
@@ -94,7 +95,7 @@ Content-Type: application/json
 List orders
 ```bash
 GET http://localhost:5000/orders
-
+```
 ## 🛠️ Project Structure
 ```bash
 .
