@@ -78,7 +78,7 @@ In other terminal
 docker compose exec api flask db upgrade
 
 ```
-Also if you want to work inside de container, there is a Make file with some commands. Just give a check up.
+Also if you want to work inside the API container, there is a Make file with some commands. Just give a check up.
 
 ### 5. Using the API
 Create a new order
